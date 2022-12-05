@@ -12,4 +12,6 @@ ADD ./www.test.com.conf /etc/apache2/sites-available
 
 RUN a2ensite www.test.com && a2dissite 000-default.conf
 
+RUN echo "$env_username $env_tagimage" > /html/index.html
+
 CMD ["apachectl", "-D", "FOREGROUND"]
