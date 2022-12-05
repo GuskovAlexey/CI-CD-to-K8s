@@ -12,6 +12,4 @@ ADD ./www.test.com.conf /etc/apache2/sites-available
 
 RUN a2ensite www.test.com && a2dissite 000-default.conf
 
-RUN echo "Username: $env_username TAG: $env_tagimage" > /docker/html/index.html
-
 CMD ["apachectl", "-D", "FOREGROUND"]
