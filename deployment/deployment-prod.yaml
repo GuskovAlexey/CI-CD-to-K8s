@@ -1,0 +1,87 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: prod
+  name: app-service-prod 
+  labels:
+    app: react-app-prod
+spec:
+  type: NodePort
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30200
+  selector:
+    app: react-app-prod
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: prod
+  name: react-app-prod
+  labels:
+    app: react-app-prod
+spec:
+  selector:
+    matchLabels:
+      app: react-app-prod
+  strategy:
+    type: Recreate
+  # strategy:
+  #   rollingUpdate:
+  #     maxSurge: 1
+  #     maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: react-app-prod
+    spec:
+      containers:
+        - name: react-app-prod
+          image: alexeyguskov/react-app:latest
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "300Mi"
+              cpu: "300m"
+            limits:
+              memory: "500Mi"
+              cpu: "500m"
+          volumeMounts:
+          - name: app-persistent-volume
+            mountPath: /data
+      volumes:
+      - name: app-persistent-volume
+        persistentVolumeClaim:
+          claimName: pvc-app-prod
+---
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  namespace: prod
+  name: app-hpa-prod
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: react-app-prod
+  minReplicas: 1
+  maxReplicas: 3
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 70
