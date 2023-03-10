@@ -1,0 +1,92 @@
+name: ci-cd-dev
+
+env:
+        DOCKERHUB_USERNAME: ${{secrets.DOCKERHUB_USERNAME}}
+        DOCKERHUB_TOKEN: ${{secrets.DOCKERHUB_TOKEN }}
+        PRODUCT_REPO_NAME: ${{secrets.PRODUCT_REPO_NAME}}
+
+on: 
+  workflow_dispatch:
+  pull_request:
+    # types: [opened, edited,reopened]
+    paths-ignore:
+        - '.github/workflows/*'
+        - '.github/README.md'
+  
+jobs: 
+  test: 
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./app
+    steps:
+      - name: 🔎 Get repository code
+        uses: actions/checkout@v3
+      - name: 💡 Install dependecies
+        run: npm ci 
+      - name: Test app
+        run: npm run test 
+      - name: 🔎 Get repository code
+        uses: actions/checkout@v3
+      - name: 💡 Install dependecies
+        run: npm ci 
+      - name: Lint
+        run: npm run lint
+
+  build:
+    needs: [test]
+    strategy:
+      matrix:
+        node-version: [18]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: ./app
+    steps:
+      - name: 🔎 Get repository code
+        uses: actions/checkout@v3
+      - name: Install Node JS
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }} 
+      - name: 🖥️  Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}      
+      - name: Build user service docker image sha
+        run: docker build  --file Dockerfile -t "$DOCKERHUB_USERNAME/$PRODUCT_REPO_NAME:${{ github.sha }}" .
+      - name: Push user service docker image sha
+        run: docker push "$DOCKERHUB_USERNAME/$PRODUCT_REPO_NAME:${{ github.sha }}"
+      - name: Build user service docker image latest
+        run: docker build  --file Dockerfile -t "$DOCKERHUB_USERNAME/$PRODUCT_REPO_NAME:latest" .
+      - name: Push user service docker image latest
+        run: docker push "$DOCKERHUB_USERNAME/$PRODUCT_REPO_NAME:latest"
+
+  deploy:
+    needs: [test, build]
+    name: Deploy to Kubernetes DEV
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./app
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Create kubeconfig
+      env:
+         KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+      run: |
+         sudo mkdir ${HOME}/.kube
+         sudo chown -R $USER ${HOME}/.kube 
+         sudo echo "$KUBE_CONFIG" | base64 -d  > ${HOME}/.kube/config
+              
+    - name: Use context
+      run: kubectl config use-context kind-app-1-cluster
+    - name: Deploy to K8s
+      run: |
+        kubectl --insecure-skip-tls-verify rollout restart deployment/react-app-dev -n dev
+        kubectl --insecure-skip-tls-verify rollout status deployment/react-app-dev -n dev
+
+
