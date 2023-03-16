@@ -47,10 +47,10 @@ spec:
           resources:
             requests:
               memory: "300Mi"
-              cpu: "300m"
+              cpu: "200m"
             limits:
               memory: "500Mi"
-              cpu: "500m"
+              cpu: "200m"
           volumeMounts:
           - name: app-persistent-volume
             mountPath: /data
@@ -71,7 +71,7 @@ spec:
     kind: Deployment
     name: react-app-prod
   minReplicas: 1
-  maxReplicas: 3
+  maxReplicas: 2
   metrics:
     - type: Resource
       resource:

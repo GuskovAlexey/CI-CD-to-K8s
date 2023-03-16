@@ -1,0 +1,10 @@
+Установить Helm Chart Kube-Prometheus-Stack 
+Для настройки scrape использовать переменную prometheus.prometheusSpec.additionalScrapeConfigs
+# addalias 
+alias helm='helm --kube-insecure-skip-tls-verify' 
+
+# show values 
+helm show values prometheus-community/kube-prometheus-stack > prometheus.yaml 
+
+# run 
+helm --kube-insecure-skip-tls-verify install grafana --namespace grafana -f prometheus.yaml prometheus-community/kube-prometheus-stack

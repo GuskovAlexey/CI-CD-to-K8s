@@ -1,0 +1,18 @@
+alertmanager:
+  enabled: false 
+
+# grafana config
+grafana:
+  ingress:
+    enabled: true
+    hosts:
+      - grafana
+
+# prometheus config
+prometheus:
+  ingress:
+    enabled: true
+    hosts:
+      - prometheus
+    paths:
+      - /
