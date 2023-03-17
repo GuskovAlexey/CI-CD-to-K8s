@@ -15,7 +15,7 @@ pipeline {
         
     stage('Prepare') {
         steps {
-            IMAGE_NAME= "${DOCKER_REGISTRY}react:${TAG}"
+            IMAGE_NAME = "${DOCKER_REGISTRY}react:${TAG}"
         }
     }
      
