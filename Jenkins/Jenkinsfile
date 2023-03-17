@@ -24,7 +24,7 @@ pipeline {
     stage('Build') {
       steps {
         dir(APP_PATH){
-            sh 'docker build -t ${IMAGE_NAME} -f Dockerfile'
+            sh "docker build -t ${IMAGE_NAME} -f Dockerfile ."
         }
       }
     }    
