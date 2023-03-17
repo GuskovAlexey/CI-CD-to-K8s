@@ -1,0 +1,41 @@
+pipeline{
+    agent any
+    options{
+        buildDiscarder(logRotator(numToKeepStr: '5', daysToKeepStr: '5'))
+        timestamps()
+    }
+    environment{
+        APP_PATH = "/app"
+        registry = "<alexeyguskov>/react-jenkins"
+        registryCredential = 'dockerhub'        
+    }
+    
+    stages{
+      stage('Building image') {
+        steps{
+            checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'GitHub', url: 'https://github.com/GuskovAlexey/test']])
+                dir(APP_PATH) { 
+                    script {
+                        dockerImage = docker.build registry + ":$BUILD_NUMBER"
+         }
+        }
+      }
+    }
+       stage('Deploy Image') {
+        steps{
+          dir(APP_PATH) {
+          script {
+            docker.withRegistry( 'https://registry.hub.docker.com', github ) {
+            dockerImage.push()
+          }
+         }
+        }
+      }
+    }
+    }
+      stage('Cleaning up') {
+       steps{
+            sh "docker rmi $registry:$BUILD_NUMBER"
+       }
+    }
+}
