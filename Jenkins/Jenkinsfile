@@ -8,7 +8,7 @@ pipeline {
   environment{
     APP_PATH = "app" 
     DOCKER_REGISTRY = "alexeyguskov/react-app-test"
-    dockerhub = credentials('dockerhub')
+    DOCKERHUB_CREDENTIALS = credentials('dockerhub')
     TAG = "latest"
   }  
   stages {
@@ -27,14 +27,17 @@ pipeline {
             sh "docker build -t ${IMAGE_NAME} -f Dockerfile ."
         }
       }
+    }
+    stage('Login') {
+      steps {
+        sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"
+      }
     }   
     stage('Push') {
         steps {
-          withDockerRegistry(credentialsId: 'dockerhub', toolName: 'docker', url: 'https://hub.docker.com/') {
             dir(APP_PATH){
                 sh "docker push ${IMAGE_NAME}"
-            }
-          }      
+            }    
         }
     } 
   }
