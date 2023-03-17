@@ -6,7 +6,7 @@ pipeline {
     dockerTool 'docker'
   }
   environment{
-    APP_PATH = "/app" 
+    APP_PATH = "app" 
     DOCKER_REGISTRY = "alexeyguskov/react-app-test"
     dockerhub = credentials('dockerhub')
     TAG = "latest"
