@@ -9,7 +9,7 @@ pipeline {
     APP_PATH = "/app" 
     DOCKER_REGISTRY = "alexeyguskov/react-app-test"
     dockerhub = credentials('dockerhub')
-    TAG = latest
+    TAG = "latest"
   }  
   stages {
         
