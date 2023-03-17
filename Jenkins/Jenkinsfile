@@ -1,28 +1,28 @@
 #!/usr/bin/env groovy
-
-Pipeline {
-    agent { 
-        docker {
-            image 'node'
-            args '-u root'
-        }
+pipeline {
+  agent any
+    
+  tools {nodejs "node"}
+    
+  stages {
+        
+    stage('Git') {
+      steps {
+        git 'https://github.com/GuskovAlexey/test/app'
+      }
     }
-
-    environment {
-        APP_PATH = "/app"
+     
+    stage('Build') {
+      steps {
+        sh 'npm install'
+      }
+    }  
+    
+            
+    stage('Test') {
+      steps {
+        sh 'node run test'
+      }
     }
-    stages {
-        stage('Build') {
-            steps{
-              dir(APP_PATH){
-                sh "npm install"
-                }
-              }
-            }
-            steps{
-              dir(APP_PATH) {
-                sh "npm run lint"
-              }
-            }  
-    }
+  }
 }
