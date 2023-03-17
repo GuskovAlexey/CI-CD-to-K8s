@@ -8,13 +8,15 @@ pipeline {
         
     stage('Git') {
       steps {
-        git 'https://github.com/GuskovAlexey/test/app'
+        git 'https://github.com/GuskovAlexey/test'
       }
     }
      
     stage('Build') {
       steps {
-        sh 'npm install'
+        dir("/app"){
+            sh 'npm install'
+        }
       }
     }  
     
