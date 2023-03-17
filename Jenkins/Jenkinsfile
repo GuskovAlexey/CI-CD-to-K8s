@@ -2,29 +2,29 @@
 pipeline {
   agent any
     
-  tools {nodejs "18.0.0"}
-    
+  tools {
+    dockerTool 'docker'
+  }
+  environment{
+    APP_PATH = "/app" 
+    DOCKER_REGISTRY = "alexeyguskov/react-app-test"
+    dockerhub = credentials('dockerhub')
+    TAG = latest
+  }  
   stages {
         
-    stage('Git checkout') {
-      steps {
-        checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'GitHub', url: 'https://github.com/GuskovAlexey/test']])
-      }
+    stage('Prepare') {
+        steps {
+            IMAGE_NAME= "${DOCKER_REGISTRY}react:${TAG}"
+        }
     }
      
     stage('Build') {
       steps {
-        dir("/app"){
-            sh 'npm install'
+        dir(APP_PATH){
+            sh 'docker build -t ${IMAGE_NAME} -f Dockerfile'
         }
       }
-    }  
-    
-            
-    stage('Test') {
-      steps {
-        sh 'node run test'
-      }
-    }
+    }    
   }
 }

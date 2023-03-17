@@ -7,11 +7,11 @@ env:
 
 on: 
   workflow_dispatch:
-  pull_request:
-    # types: [opened, edited,reopened]
-    paths-ignore:
-        - '.github/workflows/*'
-        - '.github/README.md'
+  # pull_request:
+  #   # types: [opened, edited,reopened]
+  #   paths-ignore:
+  #       - '.github/workflows/*'
+  #       - '.github/README.md'
   
 jobs: 
   test: 
