@@ -6,9 +6,9 @@ pipeline {
     
   stages {
         
-    stage('Git') {
+    stage('Git checkout') {
       steps {
-        git 'https://github.com/GuskovAlexey/test'
+        checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'GitHub', url: 'https://github.com/GuskovAlexey/test']])
       }
     }
      
