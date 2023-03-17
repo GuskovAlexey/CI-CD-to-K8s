@@ -27,6 +27,15 @@ pipeline {
             sh "docker build -t ${IMAGE_NAME} -f Dockerfile ."
         }
       }
-    }    
+    }   
+    stage('Push') {
+        steps {
+          withDockerRegistry(credentialsId: 'dockerhub', toolName: 'docker', url: 'https://hub.docker.com/') {
+            dir(APP_PATH){
+                sh "docker push ${IMAGE_NAME}"
+            }
+          }      
+        }
+    } 
   }
 }
