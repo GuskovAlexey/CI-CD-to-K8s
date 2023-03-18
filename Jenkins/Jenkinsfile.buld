@@ -9,14 +9,14 @@ pipeline {
     APP_PATH = "app" 
     DOCKER_REGISTRY = "alexeyguskov/react-app-test"
     DOCKERHUB_CREDENTIALS = credentials('dockerhub')
+    TAG = "latest"
   }  
   stages {
         
     stage('Prepare') {
         steps {
           script {
-            IMAGE_NAME_LATEST = "${DOCKER_REGISTRY}:latest"
-            IMAGE_NAME_BUILD_NUMBER = "${DOCKER_REGISTRY}:${BUILD_NUMBER}"
+            IMAGE_NAME = "${DOCKER_REGISTRY}:${TAG}"
           }
         }
     }
@@ -24,8 +24,7 @@ pipeline {
     stage('Build') {
       steps {
         dir(APP_PATH){
-            sh "docker build -t ${IMAGE_NAME_LATEST} -f Dockerfile ."
-            sh "docker build -t ${IMAGE_NAME__BUILD_NUMBER} -f Dockerfile ."
+            sh "docker build -t ${IMAGE_NAME} -f Dockerfile ."
         }
       }
     }
@@ -37,8 +36,8 @@ pipeline {
     stage('Push') {
         steps {
             dir(APP_PATH){
-                sh "docker push ${IMAGE_NAME_LATEST}"
-                sh "docker push ${IMAGE_NAME__BUILD_NUMBER}"
+                sh "docker push ${IMAGE_NAME}"
+            }    
         }
     } 
   }
