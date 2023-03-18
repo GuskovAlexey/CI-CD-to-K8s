@@ -16,7 +16,7 @@ pipeline {
         steps {
           script {
             IMAGE_NAME_LATEST = "${DOCKER_REGISTRY}:latest"
-            IMAGE_NAME_BUILD_NUMBER = "${DOCKER_REGISTRY}:${GIT_COMMIT[0:7]}"
+            IMAGE_NAME_BUILD_NUMBER = "${DOCKER_REGISTRY}:${GIT_COMMIT:0:7}"
           }
         }
     }
