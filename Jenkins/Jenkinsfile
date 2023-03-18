@@ -38,7 +38,7 @@ pipeline {
         steps {
             dir(APP_PATH){
                 sh "docker push ${IMAGE_NAME_LATEST}"
-                sh "docker push ${IMAGE_NAME__BUILD_NUMBER}"
+                sh "docker push ${IMAGE_NAME_BUILD_NUMBER}"
             }
         } 
     }
