@@ -54,12 +54,14 @@ pipeline {
     }   
     stage('Use context') {
       steps {
-        sh "kubectl config use-context kind-app-1-cluster"
+        withCredentials([file(credentialsId: '', variable: 'kubeconfig2')]) {
+          sh "kubectl --insecure-skip-tls-verify get nodes"
+}
       }  
     }
     stage('Deploy') {
       steps {
-        sh "kubectl --insecure-skip-tls-verify get nodes "
+        
      }
     }
   }
