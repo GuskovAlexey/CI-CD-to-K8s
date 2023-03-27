@@ -54,8 +54,8 @@ pipeline {
     }   
     stage('Use context') {
       steps {
-        withCredentials([file(credentialsId: 'kubeconfig2', variable: '')]) {
-          sh "kubectl --insecure-skip-tls-verify get nodes"
+        withCredentials([file(credentialsId: 'kubeconfig2', variable: 'KUBE_CONFIG')]) {
+          sh "kubectl --insecure-skip-tls-verify  --kubeconfig=\$KUBE_CONFIG  get nodes"
         }
       }  
     }
