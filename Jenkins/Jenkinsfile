@@ -47,7 +47,7 @@ pipeline {
     }
     stage('copy cubeconfig') {
       steps {
-        sh "sudo mkdir ${HOME}/.kube"
+        sh "sudo mkdir -p ${HOME}/.kube"
         sh "sudo chown -R $USER ${HOME}/.kube" 
         sh "sudo echo $KUBE_CONFIG > ${HOME}/.kube/config"
       }
