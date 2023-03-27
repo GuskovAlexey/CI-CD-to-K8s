@@ -26,6 +26,7 @@ pipeline {
       steps {
         dir(APP_PATH){
             sh "sudo usermod -a -G docker jenkins"
+            sh "sudo chmod 777 /var/run/docker.sock"
             sh "docker build -t ${IMAGE_NAME_LATEST} -f Dockerfile ."
             sh "docker build -t ${IMAGE_NAME_BUILD_NUMBER} -f Dockerfile ."
         }
