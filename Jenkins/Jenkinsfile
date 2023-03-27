@@ -9,7 +9,7 @@ pipeline {
     APP_PATH = "app" 
     DOCKER_REGISTRY = "alexeyguskov/react-app-test"
     DOCKERHUB_CREDENTIALS = credentials('dockerhub')
-    KUBE_CONFIG = credentials('kubeconfig')
+    KUBE_CONFIG = credentials('kubeconfig2')
   }  
   stages {
         
