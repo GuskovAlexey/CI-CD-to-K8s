@@ -25,6 +25,8 @@ pipeline {
     stage('Build') {
       steps {
         dir(APP_PATH){
+            sh "sudo usermod -aG docker ${USER}"
+            sh "su -s ${USER}"
             sh "docker build -t ${IMAGE_NAME_LATEST} -f Dockerfile ."
             sh "docker build -t ${IMAGE_NAME_BUILD_NUMBER} -f Dockerfile ."
         }
