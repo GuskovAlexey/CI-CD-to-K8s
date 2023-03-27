@@ -52,8 +52,13 @@ pipeline {
         sh "sudo echo $KUBE_CONFIG > ${HOME}/.kube/config"
       }
     }   
-
-
-
+    stage('Use context') {
+      steps {
+        sh "kubectl config use-context kind-app-1-cluster"
+      }  
+    }
+    stage('Deploy') {
+      steps {
+        sh "kubectl --insecure-skip-tls-verify get nodes "
   }
 }
