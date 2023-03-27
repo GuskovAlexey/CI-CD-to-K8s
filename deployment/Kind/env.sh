@@ -1,7 +1,7 @@
 #! /bin/env bash
 
-export DOCKER_HOST_IP="172.31.24.213"
-export DOCKER_HOST_EXTERNAL_IP="35.176.54.66"
+export DOCKER_HOST_IP="172.31.22.4"
+export DOCKER_HOST_EXTERNAL_IP="3.8.173.39"
 export POD_SUBNET="10.240.0.0/16"
 export SERVICE_SUBNET="10.0.0.0/16"
 export VOLUME_NODE1_HOST="/tmp/data-worker/"

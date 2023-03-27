@@ -9,6 +9,7 @@ pipeline {
     APP_PATH = "app" 
     DOCKER_REGISTRY = "alexeyguskov/react-app-test"
     DOCKERHUB_CREDENTIALS = credentials('dockerhub')
+    KUBE_CONFIG = credentials('kubeconfig')
   }  
   stages {
         
@@ -42,5 +43,15 @@ pipeline {
             }
         } 
     }
+    stage('copy cubeconfig') {
+      steps {
+        sh "sudo mkdir ${HOME}/.kube"
+        sh "sudo chown -R $USER ${HOME}/.kube" 
+        sh "sudo echo "$KUBE_CONFIG" > ${HOME}/.kube/config"
+      }
+    }   
+
+
+
   }
 }
