@@ -7,12 +7,12 @@ env:
 
 on: 
   workflow_dispatch:
-  # push:
-  #     branches:
-  #       - 'main'   
-  #     paths-ignore:
-  #       - '.github/workflows/*'
-  #       - '.github/README.md'
+  push:
+      branches:
+        - 'main'   
+      paths-ignore:
+        - '.github/workflows/*'
+        - '.github/README.md'
 jobs: 
   test: 
     runs-on: ubuntu-latest
